@@ -4,6 +4,10 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var sassMiddleware = require('node-sass-middleware');
+const session = require('express-session')
+const passport = require('passport')
+const strategy = require('auth/strategy')
+const users = require('auth/users')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -13,6 +17,19 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'twig');
+
+app.use(session({
+  secret: 'my secret',
+  resave: true,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 10_000,
+  }
+}))
+
+
+
+
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -25,6 +42,18 @@ app.use(sassMiddleware({
   sourceMap: true
 }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+passport.use(strategy)
+passport.serializeUser((user, done) => {
+  done(null, user.username);
+});
+
+passport.deserializeUser((username, done) => {
+  done(err, users[username]);
+});
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

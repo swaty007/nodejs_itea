@@ -13,8 +13,9 @@ router.post('/', (req, res, next) => {
   res.send('respond with a resource');
 });
 
-router.get('/', (req, res, next) => {
-  res.send('respond with a resource');
+router.get('/:id', (req, res, next) => {
+  res.send(req.params.id);
+  // res.send('respond with a resource');
 });
 
 router.put('/:id', (req, res, next) => {
