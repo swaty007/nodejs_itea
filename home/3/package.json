@@ -7,12 +7,15 @@
     "dev": "nodemon --ext js,twig,sass ./bin/www"
   },
   "dependencies": {
-    "@types/passport-local": "^1.0.33",
+    "bootstrap": "^4.6.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
+    "dotenv": "^8.2.0",
     "express": "~4.16.1",
     "express-session": "^1.17.1",
     "http-errors": "~1.6.3",
+    "mongodb": "^3.6.4",
+    "mongoose": "^5.11.18",
     "morgan": "~1.9.1",
     "node-sass-middleware": "0.11.0",
     "passport": "^0.4.1",
@@ -22,7 +25,10 @@
   },
   "devDependencies": {
     "@types/express-session": "^1.17.3",
+    "@types/mongodb": "^3.6.8",
+    "@types/mongoose": "^5.10.3",
     "@types/passport": "^1.0.6",
+    "@types/passport-local": "^1.0.33",
     "nodemon": "^2.0.7"
   }
 }

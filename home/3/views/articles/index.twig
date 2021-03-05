@@ -1,0 +1,18 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+    <h1>{{title}}</h1>
+    <p>Welcome to {{title}}</p>
+    {% for article in articles %}
+        <div class="my-5">
+            <h2>
+                {{ article.title }}
+            </h2>
+            <p>
+                {{ article.text }}
+            </p>
+            <a href="/articles/{{ article._id }}">Show</a>
+        </div>
+    {% endfor %}
+
+{% endblock %}

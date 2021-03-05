@@ -1,0 +1,15 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+    <h1>{{title}}</h1>
+
+    <form action="/register" method="POST">
+
+        <input type="text" name="username" placeholder="Login">
+        <input type="text" name="name" placeholder="Name">
+        <input type="text" name="password" placeholder="Password">
+        <input type="text" name="age" placeholder="Age">
+
+        <button type="submit">Register</button>
+    </form>
+{% endblock %}

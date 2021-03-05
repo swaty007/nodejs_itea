@@ -5,12 +5,11 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var sassMiddleware = require('node-sass-middleware');
 const session = require('express-session')
-const passport = require('passport')
-const strategy = require('auth/strategy')
-const users = require('auth/users')
+const auth = require('./auth/strategy')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var articlesRouter = require('./routes/articles');
 
 var app = express();
 
@@ -23,11 +22,11 @@ app.use(session({
   resave: true,
   saveUninitialized: true,
   cookie: {
-    maxAge: 10_000,
+    // maxAge: 10_000,
   }
 }))
 
-
+app.use(auth());
 
 
 
@@ -38,33 +37,28 @@ app.use(cookieParser());
 app.use(sassMiddleware({
   src: path.join(__dirname, 'public'),
   dest: path.join(__dirname, 'public'),
-  indentedSyntax: true, // true = .sass and false = .scss
-  sourceMap: true
+  indentedSyntax: false, // true = .sass and false = .scss
+  sourceMap: true,
+  debug: false,
+  outputStyle: 'compressed',
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-passport.use(strategy)
-passport.serializeUser((user, done) => {
-  done(null, user.username);
-});
 
-passport.deserializeUser((username, done) => {
-  done(err, users[username]);
-});
-app.use(passport.initialize());
-app.use(passport.session());
+
 
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/articles', articlesRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use((err, req, res, next) =>{
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

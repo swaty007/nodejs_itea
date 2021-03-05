@@ -1,22 +1,36 @@
 // const { Strategy:LocalStrategy } = require('passport-local').Strategy
 const { Strategy: LocalStrategy } = require('passport-local')
-const users = require('./users')
+const User = require('../models/user')
+const passport = require('passport')
 
 const strategy = new LocalStrategy(
     {
         usernameField: 'login',
         passwordField: 'password',
     },
-    (username, password, done) => {
-    if ( username in users === false)
+    async (username, password, done) => {
+        let user = await User.findOne({ username: username })
+    if ( !user )
         return done(new Error(`no user ${username}`), false)
 
-    const user = users[username]
 
-    if (password !== user)
+    if (password !== user.password)
         return done(new Error(`password error`), false)
 
-    return done(null, users[username]);
+    return done(null, user);
 })
 
-module.exports = strategy
+passport.use(strategy)
+passport.serializeUser((user, done) => {
+    done(null, user.username);
+});
+
+passport.deserializeUser(async (username, done) => {
+    let user = await User.findOne({ username: username })
+    done(null, user);
+});
+
+module.exports = () => [
+    passport.initialize(),
+    passport.session()
+]

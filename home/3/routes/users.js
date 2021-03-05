@@ -1,13 +1,11 @@
 var express = require('express');
 var router = express.Router();
 
-let users = [
-  {
-    id: '1',
-    name: 'Name',
-    age: 16,
-  },
-]
+router.use((req, res, next) => {
+  if (!req.isAuthenticated())
+    return res.redirect('/login');
+  next()
+})
 
 router.post('/', (req, res, next) => {
   res.send('respond with a resource');
