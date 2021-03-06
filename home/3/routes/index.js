@@ -16,23 +16,28 @@ router.route('/login')
     })
     .post(passport.authenticate('local', {failureRedirect: '/login'}),
         (req, res) => {
-            res.redirect('/');
+            return res.redirect('/');
         });
+
+router.route('/logout').get((req,res) => {
+    req.logout()
+    return res.redirect('/');
+})
 
 router.route('/register')
     .get(async (req, res, next) => {
         if (req.isAuthenticated())
             return res.redirect('/');
 
-        res.render('register', {title: 'Register'});
+        return res.render('register', {title: 'Register'});
     })
     .post(async (req, res) => {
 
         let user = new User({
-            username: req.params.username,
-            age: req.params.age,
-            name: req.params.name,
-            password: req.params.password,
+            username: req.body.username,
+            age: req.body.age,
+            name: req.body.name,
+            password: req.body.password,
         })
 
         try {
